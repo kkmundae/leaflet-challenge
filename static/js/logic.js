@@ -3,7 +3,7 @@
 // This gets inserted into the div with an id of 'map' in index.html
 var myMap = L.map("map", {
     center: [0, 0],
-    zoom: 5
+    zoom: 1.5
 });
 
 // Adding a tile layer (the background map image) to our map
@@ -25,25 +25,25 @@ d3.json(queryUrl, function (data) {
         return {
             opacity: 1,
             fillOpacity: 1,
-            fillColor: getColor(feature.properties.mag),
-            color: "#000000",
+            fillColor: getColor(feature.geometry.coordinates[2]),
+            color: "purple",
             radius: getRadius(feature.properties.mag),
             stroke: true,
             weight: 0.5
         };
     }
-    // set different color from magnitude
-    function getColor(magnitude) {
+    // set different color from depths
+    function getColor(depth) {
         switch (true) {
-            case magnitude > 5:
+            case depth > 50:
                 return "red";
-            case magnitude > 4:
+            case depth > 40:
                 return "orange";
-            case magnitude > 3:
+            case depth > 30:
                 return "yellow";
-            case magnitude > 2:
-                return "#green";
-            case magnitude > 1:
+            case depth > 20:
+                return "green";
+            case depth > 10:
                 return "blue";
             default:
                 return "purple";
@@ -80,14 +80,14 @@ d3.json(queryUrl, function (data) {
     legend.onAdd = function () {
         var div = L.DomUtil.create("div", "info legend");
 
-        var grades = [0, 1, 2, 3, 4, 5];
+        var grades = [-10, 10, 20, 30, 40, 50];
         var colors = [
-            "#98ee00",
-            "#d4ee00",
-            "#eecc00",
-            "#ee9c00",
-            "#ea822c",
-            "#ea2c2c"
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "purple"
         ];
 
         // Looping through
@@ -99,6 +99,6 @@ d3.json(queryUrl, function (data) {
         return div;
     };
 
-    // Finally, we our legend to the map.
+    // Finally, we add our legend to the map.
     legend.addTo(myMap);
 });
